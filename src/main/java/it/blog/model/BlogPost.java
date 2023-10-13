@@ -1,25 +1,27 @@
 package it.blog.model;
 
-import java.util.List;
-
-import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "post")
 public class BlogPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "title")
     private String title;
+    @Column(name = "body")
     private String body;
-    private String status;
+    @Column(name = "status")
+	public String status;
+    @Column(name = "authorName")
     private String authorName;
-    @ElementCollection
-    private List<String> hashtags;
-    
+
     // getters and setters
 	public Long getId() {
 		return id;
@@ -50,13 +52,6 @@ public class BlogPost {
 	}
 	public void setAuthorName(String authorName) {
 		this.authorName = authorName;
-	}
-	public List<String> getHashtags() {
-		return hashtags;
-	}
-	public void setHashtags(List<String> hashtags) {
-		this.hashtags = hashtags;
-	}
-    
+	} 
     
 }

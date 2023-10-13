@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.blog.dao.BlogPostRepository;
@@ -22,15 +21,19 @@ public class BlogPostController {
     @Autowired
     private BlogPostRepository blogPostRepository;
 
-    @GetMapping
+    @GetMapping("/get")
     public List<BlogPost> getPublicPosts() {
         return blogPostRepository.findByStatus("published");
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public BlogPost createPost(@RequestBody BlogPost post) {
-        // Set default values
-        post.setStatus("draft");
+    	if (post.getStatus() == null || post.getStatus() == "") {
+            post.setStatus("draft");}
+    	else {
+			post.setStatus(post.getStatus());
+		}
+
         post.setAuthorName("Brian Fox");
         return blogPostRepository.save(post);
     }
@@ -42,16 +45,12 @@ public class BlogPostController {
             post.setStatus("published");
             return blogPostRepository.save(post);
         }
-        return null; // Handle error gracefully
+        return null;
     }
 
-    @DeleteMapping("/{postId}")
+    @DeleteMapping("/delete/{postId}")
     public void deletePost(@PathVariable Long postId) {
         blogPostRepository.deleteById(postId);
     }
 
-    @GetMapping("/filter")
-    public List<BlogPost> filterByHashtags(@RequestParam List<String> hashtags) {
-        return blogPostRepository.findByStatusAndHashtagsIn("published", hashtags);
-    }
 }
